@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class ClienteRepository {
     
     private List <Cliente> clientes;
+    private int nextCode;
 
     @PostConstruct
     public void criarClientes(){
@@ -47,6 +48,7 @@ public class ClienteRepository {
         clientes.add(c3);
         clientes.add(c4);
 
+        nextCode = 5;
     }
 
     public List <Cliente> getAllClientes() {
@@ -63,8 +65,23 @@ public class ClienteRepository {
     }
 
     public Cliente save(Cliente cliente) {
-        cliente.setCodigo(clientes.size() + 1);
+        cliente.setCodigo(nextCode++);
         clientes.add(cliente);
         return cliente;
     }
+
+	public void remove(Cliente cliente) {
+        clientes.remove(cliente);
+	}
+
+	public Cliente update(Cliente cliente) {
+        Cliente aux = getClienteByCodigo(cliente.getCodigo());
+
+        if(aux != null){
+            aux.setNome(cliente.getNome());
+            aux.setEndereco(cliente.getEndereco());
+            aux.setSaldo(cliente.getSaldo());
+        }
+        return aux;
+	}
 }
